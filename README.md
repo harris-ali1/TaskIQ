@@ -22,4 +22,3 @@ Built with **React (Vite + SWC)** and **Tailwind CSS**, it delivers a fast, mode
 - **Version Control:** Git & GitHub
 
 ---
-
