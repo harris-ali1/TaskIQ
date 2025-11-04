@@ -1,12 +1,41 @@
+// Import NavLink from react-router-dom for SPA navigation
+import { NavLink } from "react-router-dom";
+
 export default function Sidebar() {
+  // Function that dynamically sets classes based on active route
+  const linkClasses = ({ isActive }) =>
+    `
+      flex items-center gap-2 px-3 py-2 rounded-md transition-all duration-200
+      ${
+        // Active link — highlighted background + bright text
+        isActive
+          ? "bg-[#28282B] text-white font-semibold shadow-sm"
+          // Inactive link — gray text, highlight on hover
+          : "text-[#aaaaaa] hover:bg-[#1a1a1a] hover:text-[#666666]"
+      }
+    `;
+
   return (
-    <div className="w-64 bg-gray-800 p-5 flex flex-col gap-6">
-      <h1 className="text-2xl font-bold text-blue-400">TaskIQ</h1>
-      <nav className="flex flex-col gap-3 text-gray-300">
-        <a href="#" className="hover:text-blue-400">🏠 Dashboard</a>
-        <a href="#" className="hover:text-blue-400">📋 All Tasks</a>
-        <a href="#" className="hover:text-blue-400">👥 Team</a>
-        <a href="#" className="hover:text-blue-400">📊 Analytics</a>
+    // Sidebar container
+    <div className="w-64 bg-[#0F0F0F] p-5 flex flex-col gap-6 border-r border-gray-800">
+      {/* ========== Navigation links ========== */}
+      <nav className="flex flex-col gap-2">
+        {/* Each NavLink automatically gets an active state from React Router */}
+        <NavLink to="/" className={linkClasses}>
+          🏠 Dashboard
+        </NavLink>
+
+        <NavLink to="/tasks" className={linkClasses}>
+          📋 All Tasks
+        </NavLink>
+
+        <NavLink to="/team" className={linkClasses}>
+          👥 Team
+        </NavLink>
+
+        <NavLink to="/analytics" className={linkClasses}>
+          📊 Analytics
+        </NavLink>
       </nav>
     </div>
   );

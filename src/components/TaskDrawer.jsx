@@ -1,6 +1,7 @@
 export default function TaskDrawer({ task, loading, estimate, onEstimate }) {
   return (
-    <aside className="w-[380px] border-l border-gray-800 bg-gray-850 bg-gray-800/60 backdrop-blur p-5 hidden md:block">
+    <aside className="w-[380px] border border-white bg-[#0F0F0F] p-5 hidden md:block rounded-lg shadow-lg">
+
       {!task ? (
         <div className="text-gray-400">Select a task to view details.</div>
       ) : (

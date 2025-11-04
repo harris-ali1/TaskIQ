@@ -66,7 +66,7 @@ export default function Dashboard() {
       <div className="flex-1 p-6">
         <div className="mb-4">
           <h1 className="text-2xl font-semibold">All Tasks</h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-900">
             Click a row to open details and run an AI estimate.
           </p>
         </div>
