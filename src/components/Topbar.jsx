@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // used for in-app navigation
 import { Menu, X } from "lucide-react";
 
 export default function Topbar({ sidebarOpen, setSidebarOpen }) {
@@ -7,6 +8,9 @@ export default function Topbar({ sidebarOpen, setSidebarOpen }) {
 
   // Ref is attached to the dropdown area for detecting clicks outside
   const dropdownRef = useRef(null);
+
+  // React Router navigation function
+  const navigate = useNavigate();
 
   // Effect closes the dropdown if user clicks anywhere outside it
   useEffect(() => {
@@ -23,6 +27,12 @@ export default function Topbar({ sidebarOpen, setSidebarOpen }) {
     // Cleanup: remove event listener when component unmounts
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Handles click on dropdown items and navigates to appropriate route
+  const handleNavigation = (path) => {
+    setDropdownOpen(false); // close dropdown when navigating
+    navigate(path);         // navigate to the desired route
+  };
 
   return (
     // Main top navigation bar — holds sidebar toggle, search bar, and user section
@@ -62,7 +72,6 @@ export default function Topbar({ sidebarOpen, setSidebarOpen }) {
       {/* ===== Right Section: User profile & dropdown ===== */}
       <div className="relative" ref={dropdownRef}> 
         {/* Button that shows user avatar and name — clicking toggles dropdown visibility */}
-        {/* Added: highlight effect on hover to match sidebar style */}
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)} // toggles dropdown open/closed
           className="flex items-center gap-2 px-3 py-1 rounded-md transition-all duration-200 hover:bg-[#1a1a1a] hover:text-blue-400"
@@ -79,11 +88,11 @@ export default function Topbar({ sidebarOpen, setSidebarOpen }) {
         {dropdownOpen && (
           <div className="absolute right-0 mt-2 w-40 bg-[#1a1a1a] border border-gray-700 rounded-md shadow-lg">
             <ul className="py-1 text-sm text-gray-200">
-              {/* Each option is a simple button — you can attach onClick handlers later */}
+              {/* Each option calls handleNavigation() with appropriate route */}
               <li>
                 <button
+                  onClick={() => handleNavigation("/profile")}
                   className="w-full text-left px-4 py-2 hover:bg-blue-600/20 transition"
-                  onClick={() => console.log("Profile clicked")}
                 >
                   Profile
                 </button>
@@ -91,8 +100,8 @@ export default function Topbar({ sidebarOpen, setSidebarOpen }) {
 
               <li>
                 <button
+                  onClick={() => handleNavigation("/settings")}
                   className="w-full text-left px-4 py-2 hover:bg-blue-600/20 transition"
-                  onClick={() => console.log("Settings clicked")}
                 >
                   Settings
                 </button>
@@ -100,8 +109,11 @@ export default function Topbar({ sidebarOpen, setSidebarOpen }) {
 
               <li>
                 <button
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    console.log("Sign out clicked");
+                  }}
                   className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-600/10 transition"
-                  onClick={() => console.log("Sign out clicked")}
                 >
                   Sign Out
                 </button>

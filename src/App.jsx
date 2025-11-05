@@ -5,9 +5,11 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 
 import Dashboard from "./components/Dashboard";
-import TasksPage from "./components/TasksPage";
-import TeamPage from "./components/TeamPage";
-import AnalyticsPage from "./components/AnalyticsPage";
+import TasksPage from "./pages/TasksPage";
+import TeamPage from "./pages/TeamPage";
+import AnalyticsPage from "./pages/AnalyticsPage";
+import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 
 export default function App() {
   // State to control sidebar visibility
@@ -34,6 +36,8 @@ export default function App() {
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/team" element={<TeamPage />} />
               <Route path="/analytics" element={<AnalyticsPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/settings" element={<SettingsPage />} />
             </Routes>
           </main>
         </div>
