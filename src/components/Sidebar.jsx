@@ -11,7 +11,7 @@ export default function Sidebar() {
         isActive
           ? "bg-[#28282B] text-white font-semibold shadow-sm"
           // Inactive link — gray text, highlight on hover
-          : "text-[#aaaaaa] hover:bg-[#1a1a1a] hover:text-[#666666]"
+          : "text-[#aaaaaa] hover:bg-[#1a1a1a] hover:text-[#66666]"
       }
     `;
 

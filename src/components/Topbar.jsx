@@ -1,33 +1,114 @@
-export default function Topbar() {
+import { useState, useRef, useEffect } from "react";
+import { Menu, X } from "lucide-react";
+
+export default function Topbar({ sidebarOpen, setSidebarOpen }) {
+  // Controls visibility of the user dropdown menu
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Ref is attached to the dropdown area for detecting clicks outside
+  const dropdownRef = useRef(null);
+
+  // Effect closes the dropdown if user clicks anywhere outside it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If the click target is not inside the dropdown area, close the menu
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    // Attach global mouse-down listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Cleanup: remove event listener when component unmounts
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    // Full-width top header bar
-    // Uses your custom #0F0F0F color and a subtle bottom border
+    // Main top navigation bar — holds sidebar toggle, search bar, and user section
     <header className="h-16 bg-[#0F0F0F] flex items-center justify-between px-6 border-b border-gray-800 shadow-md sticky top-0 z-50">
       
-      {/* ========== Left: App name / logo ========== */}
-      <h1 className="text-2xl font-bold text-[#666666] tracking-wide">
-        TaskIQ
-      </h1>
+      {/* ===== Left Section: Sidebar toggle + app name ===== */}
+      <div className="flex items-center gap-3">
+        {/* Sidebar toggle button (menu icon / close icon) */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)} // toggles sidebar visibility in App.jsx
+          className="p-2 rounded-md hover:bg-[#1a1a1a] transition"
+        >
+          {/* If sidebar is open, show the "X" icon; otherwise show hamburger menu */}
+          {sidebarOpen ? (
+            <X size={22} className="text-blue-400 transition-transform duration-200 rotate-180" />
+          ) : (
+            <Menu size={22} className="text-gray-300 hover:text-blue-400 transition-transform duration-200" />
+          )}
+        </button>
 
-      {/* ========== Middle: Centered Search bar ========== */}
-      {/* The 'flex-1' lets this section expand to fill space between left and right */}
+        {/* App title label */}
+        <h1 className="text-2xl font-bold text-[#666666] tracking-wide">
+          TaskIQ
+        </h1>
+      </div>
+
+      {/* ===== Middle Section: Search bar ===== */}
+      {/* This input is centered horizontally and can later be connected to a filter/search function */}
       <div className="flex justify-center flex-1">
         <input
           type="text"
           placeholder="Search tasks..."
-          className="w-[50%] bg-[#2A2A2A] text-[#666666] px-4 py-2 rounded-md focus:outline-none focus:ring-2 "
+          className="w-[55%] bg-[#2A2A2A] text-[#666666] px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      {/* ========== Right: User info ========== */}
-      <div className="flex items-center gap-3">
-        {/* User circle (initial avatar) */}
-        <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-          H
-        </div>
+      {/* ===== Right Section: User profile & dropdown ===== */}
+      <div className="relative" ref={dropdownRef}> 
+        {/* Button that shows user avatar and name — clicking toggles dropdown visibility */}
+        {/* Added: highlight effect on hover to match sidebar style */}
+        <button
+          onClick={() => setDropdownOpen(!dropdownOpen)} // toggles dropdown open/closed
+          className="flex items-center gap-2 px-3 py-1 rounded-md transition-all duration-200 hover:bg-[#1a1a1a] hover:text-blue-400"
+        >
+          {/* Placeholder avatar circle (could be replaced with a profile image) */}
+          <div className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
+            H
+          </div>
+          {/* Display username */}
+          <span className="text-gray-200 text-sm">Harris</span>
+        </button>
 
-        {/* Username text */}
-        <span className="text-gray-200 text-sm">Harris</span>
+        {/* Conditional rendering: only show dropdown menu when dropdownOpen = true */}
+        {dropdownOpen && (
+          <div className="absolute right-0 mt-2 w-40 bg-[#1a1a1a] border border-gray-700 rounded-md shadow-lg">
+            <ul className="py-1 text-sm text-gray-200">
+              {/* Each option is a simple button — you can attach onClick handlers later */}
+              <li>
+                <button
+                  className="w-full text-left px-4 py-2 hover:bg-blue-600/20 transition"
+                  onClick={() => console.log("Profile clicked")}
+                >
+                  Profile
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className="w-full text-left px-4 py-2 hover:bg-blue-600/20 transition"
+                  onClick={() => console.log("Settings clicked")}
+                >
+                  Settings
+                </button>
+              </li>
+
+              <li>
+                <button
+                  className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-600/10 transition"
+                  onClick={() => console.log("Sign out clicked")}
+                >
+                  Sign Out
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -63,8 +63,8 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-1">
-      <div className="flex-1 p-6">
-        <div className="mb-4">
+      <div className="flex-1 p-6 pt-20 pb-6">
+        <div className="mb-12">
           <h1 className="text-2xl font-semibold">All Tasks</h1>
           <p className="text-sm text-gray-900">
             Click a row to open details and run an AI estimate.
