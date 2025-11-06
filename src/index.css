@@ -14,3 +14,12 @@ body {
   margin: 0;
   min-height: 100vh;
 }
+
+/* 🔧 Add this to your tailwind.css or index.css file */
+/* @keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-x {
+  animation: gradient-x 6s ease infinite;
+} */

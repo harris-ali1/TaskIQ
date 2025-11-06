@@ -1,38 +1,46 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+  // App.jsx
+  import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+  import { useState } from "react";
 
-import Sidebar from "./components/Sidebar";
-import Topbar from "./components/Topbar";
+  import Sidebar from "./components/Sidebar";
+  import Topbar from "./components/Topbar";
+  import Dashboard from "./components/Dashboard";
 
-import Dashboard from "./components/Dashboard";
-import TasksPage from "./pages/TasksPage";
-import TeamPage from "./pages/TeamPage";
-import AnalyticsPage from "./pages/AnalyticsPage";
-import ProfilePage from "./pages/ProfilePage";
-import SettingsPage from "./pages/SettingsPage";
+  import TasksPage from "./pages/TasksPage";
+  import TeamPage from "./pages/TeamPage";
+  import AnalyticsPage from "./pages/AnalyticsPage";
+  import ProfilePage from "./pages/ProfilePage";
+  import SettingsPage from "./pages/SettingsPage";
+  import AuthContainer from "./components/AuthContainer";
 
-export default function App() {
-  // State to control sidebar visibility
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  // This component decides whether to show AuthContainer or MainLayout based on the route
+  function LayoutRouter() {
+    const [sidebarOpen, setSidebarOpen] = useState(false); // sidebar starts closed
+    const location = useLocation();
 
-  return (
-    <Router>
-      {/* Full-page layout */}
+    // Detect whether current route is part of the auth flow
+    const isAuthPage =
+      location.pathname === "/" ||
+      location.pathname === "/login" ||
+      location.pathname === "/signup";
+
+    // If we're on the splash/login/signup routes → show AuthContainer only
+    if (isAuthPage) {
+      return <AuthContainer />;
+    }
+
+    // Otherwise → show main app layout (Topbar + Sidebar)
+    return (
       <div className="h-screen flex flex-col bg-black text-gray-100">
-        {/* Topbar now gets a prop to control sidebar */}
+        {/* Topbar always at the top */}
         <Topbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-        {/* Main content area */}
+        {/* Below topbar: sidebar + page content */}
         <div className="flex flex-1">
-          {/* Sidebar — hides on small screens when closed */}
-          {sidebarOpen && (
-            <Sidebar />
-          )}
-
-          {/* Main page content */}
+          {sidebarOpen && <Sidebar />}
           <main className="flex-1 overflow-y-auto">
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/team" element={<TeamPage />} />
               <Route path="/analytics" element={<AnalyticsPage />} />
@@ -42,6 +50,14 @@ export default function App() {
           </main>
         </div>
       </div>
-    </Router>
-  );
-}
+    );
+  }
+
+  // Router wrapper — keeps everything under BrowserRouter properly
+  export default function App() {
+    return (
+      <Router>
+        <LayoutRouter />
+      </Router>
+    );
+  }
