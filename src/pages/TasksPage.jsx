@@ -1,54 +1,31 @@
+// TasksPage.jsx — now reads/writes tasks from shared TaskContext
 import { useState } from "react";
+import { useTaskContext } from "../context/TaskContext";
+import AddTaskModal from "../components/AddTaskModal";
 
-// Seed some starter tasks (copied from Dashboard)
-const seedTasks = [
-  {
-    id: 1,
-    title: "Login page with OAuth2",
-    description:
-      "Build a responsive login page and integrate Google/GitHub OAuth. Connect to backend token exchange. Add basic tests.",
-    assignee: "",
-    status: "Open",
-  },
-  {
-    id: 2,
-    title: "Task detail drawer UI",
-    description:
-      "Create the right-side drawer for task details with Estimate with AI button and result card.",
-    assignee: "",
-    status: "In Progress",
-  },
-  {
-    id: 3,
-    title: "Analytics overview widget",
-    description:
-      "Show total estimated hours, average difficulty, and team load distribution.",
-    assignee: "",
-    status: "Open",
-  },
-];
-
-// List of possible team members
 const teamMembers = ["Harris", "Madiha", "Alex", "Sana"];
+const statuses = ["Open", "In Progress", "Done"];
 
 export default function TasksPage() {
-  // Local state to track all tasks
-  const [tasks, setTasks] = useState(seedTasks);
-
-  // Function to handle assigning a user
-  const handleAssign = (taskId, newAssignee) => {
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === taskId ? { ...t, assignee: newAssignee } : t
-      )
-    );
-  };
+  const { tasks, assignTask, updateStatus } = useTaskContext();
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-2">All Tasks</h1>
+      {showModal && <AddTaskModal onClose={() => setShowModal(false)} />}
+
+      {/* Header row */}
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="text-2xl font-semibold">All Tasks</h1>
+        <button
+          onClick={() => setShowModal(true)}
+          className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2 rounded-md transition"
+        >
+          + New Task
+        </button>
+      </div>
       <p className="text-gray-400 text-sm mb-6">
-        Assign tasks to team members manually.
+        Assign tasks and update statuses. Changes are reflected everywhere instantly.
       </p>
 
       {/* Task Table */}
@@ -71,11 +48,11 @@ export default function TasksPage() {
                   {t.description}
                 </td>
 
-                {/* Assignment Dropdown */}
+                {/* Assignment Dropdown — calls shared assignTask() */}
                 <td className="px-4 py-3">
                   <select
                     value={t.assignee}
-                    onChange={(e) => handleAssign(t.id, e.target.value)}
+                    onChange={(e) => assignTask(t.id, e.target.value)}
                     className="bg-gray-700 text-gray-200 px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Unassigned</option>
@@ -87,17 +64,21 @@ export default function TasksPage() {
                   </select>
                 </td>
 
-                {/* Status Badge */}
+                {/* Status Dropdown — calls shared updateStatus() */}
                 <td className="px-4 py-3">
-                  <span
-                    className={`text-xs px-2 py-1 rounded-md
+                  <select
+                    value={t.status}
+                    onChange={(e) => updateStatus(t.id, e.target.value)}
+                    className={`text-xs px-2 py-1 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500
                       ${t.status === "Open" ? "bg-gray-700 text-gray-200" : ""}
                       ${t.status === "In Progress" ? "bg-blue-700/40 text-blue-200" : ""}
                       ${t.status === "Done" ? "bg-green-700/40 text-green-200" : ""}
                     `}
                   >
-                    {t.status}
-                  </span>
+                    {statuses.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </select>
                 </td>
               </tr>
             ))}
@@ -105,9 +86,8 @@ export default function TasksPage() {
         </table>
       </div>
 
-      {/* Optional: Quick summary */}
       <div className="mt-6 text-sm text-gray-400">
-        <strong>Tip:</strong> Changes here are local for now — we’ll connect to a backend soon.
+        <strong>Tip:</strong> Assignments and status changes now sync with the Dashboard in real time.
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
-export default function TaskDrawer({ task, loading, estimate, onEstimate }) {
+// TaskDrawer.jsx
+export default function TaskDrawer({ task, loading, estimate, error, onEstimate }) {
   return (
     <aside className="w-[380px] border border-white bg-[#0F0F0F] p-5 hidden md:block rounded-lg shadow-lg">
 
@@ -8,7 +9,7 @@ export default function TaskDrawer({ task, loading, estimate, onEstimate }) {
         <div className="space-y-4">
           <div>
             <h2 className="text-xl font-semibold">{task.title}</h2>
-            <p className="text-sm text-gray-400">Assignee: {task.assignee}</p>
+            <p className="text-sm text-gray-400">Assignee: {task.assignee || "Unassigned"}</p>
           </div>
 
           <div className="space-y-2">
@@ -26,6 +27,14 @@ export default function TaskDrawer({ task, loading, estimate, onEstimate }) {
             {loading ? "Analyzing with TaskIQ…" : "Estimate with AI"}
           </button>
 
+          {/* Error state */}
+          {error && (
+            <div className="mt-3 rounded-md border border-red-700 p-4 bg-red-900/20 text-sm text-red-400">
+              {error}
+            </div>
+          )}
+
+          {/* Result card */}
           {estimate && (
             <div className="mt-3 rounded-md border border-gray-700 p-4 bg-gray-900/50">
               <div className="grid grid-cols-2 gap-3 mb-3">
@@ -39,7 +48,13 @@ export default function TaskDrawer({ task, loading, estimate, onEstimate }) {
                   <div className="text-xs uppercase tracking-wide text-gray-400">
                     Difficulty
                   </div>
-                  <div className="text-lg font-semibold">{estimate.difficulty}</div>
+                  <div className={`text-lg font-semibold
+                    ${estimate.difficulty === "Low" ? "text-green-400" : ""}
+                    ${estimate.difficulty === "Medium" ? "text-yellow-400" : ""}
+                    ${estimate.difficulty === "High" ? "text-red-400" : ""}
+                  `}>
+                    {estimate.difficulty}
+                  </div>
                 </div>
               </div>
               <div>

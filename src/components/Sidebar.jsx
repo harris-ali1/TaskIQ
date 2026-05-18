@@ -21,7 +21,7 @@ export default function Sidebar() {
       {/* ========== Navigation links ========== */}
       <nav className="flex flex-col gap-2">
         {/* Each NavLink automatically gets an active state from React Router */}
-        <NavLink to="/" className={linkClasses}>
+        <NavLink to="/dashboard" className={linkClasses}>
           🏠 Dashboard
         </NavLink>
 
